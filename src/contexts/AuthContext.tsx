@@ -3,20 +3,20 @@ import {
   User, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithPopup,
   signOut,
   onAuthStateChanged,
   updateProfile
 } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
   signup: (email: string, password: string, displayName: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
+  loginWithGoogle: () => Promise<User>;
   logout: () => Promise<void>;
 }
 
@@ -41,14 +41,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signup = async (email: string, password: string, displayName: string) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName });
+    return user;
   };
 
-  const login = (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  const login = async (email: string, password: string) => {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    return result.user;
   };
 
-  const loginWithGoogle = () => {
-    return signInWithRedirect(auth, googleProvider);
+  const loginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log('Google sign-in successful:', result.user);
+      return result.user;
+    } catch (error: any) {
+      console.error('Google sign-in error:', error);
+      
+      // Handle specific error cases
+      if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Sign-in was cancelled. Please try again.');
+      } else if (error.code === 'auth/popup-blocked') {
+        throw new Error('Popup was blocked by your browser. Please allow popups and try again.');
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        throw new Error('Another sign-in popup is already open.');
+      } else {
+        throw new Error(error.message || 'Failed to sign in with Google');
+      }
+    }
   };
 
   const logout = () => {
@@ -56,22 +75,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    // Handle redirect result from Google sign-in
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          // User signed in successfully via redirect
-          console.log('Google sign-in successful via redirect');
-        }
-      } catch (error) {
-        console.error('Error handling redirect result:', error);
-      }
-    };
-
-    handleRedirectResult();
-
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log('Auth state changed:', user);
       setCurrentUser(user);
       setLoading(false);
     });
