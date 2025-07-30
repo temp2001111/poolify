@@ -5,7 +5,7 @@ import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardContent from '../components/dashboard/DashboardContent';
 
 const Dashboard: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeItem, setActiveItem] = useState('dashboard');
 
   const handleMenuClick = () => {
@@ -13,7 +13,10 @@ const Dashboard: React.FC = () => {
   };
 
   const handleSidebarClose = () => {
-    setSidebarOpen(false);
+    // Only close on mobile
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
   };
 
   const handleItemClick = (item: string) => {
@@ -35,7 +38,7 @@ const Dashboard: React.FC = () => {
       />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
         {/* Header */}
         <DashboardHeader onMenuClick={handleMenuClick} />
 

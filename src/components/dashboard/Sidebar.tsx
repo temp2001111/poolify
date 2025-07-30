@@ -38,25 +38,26 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeItem, onItemCl
   return (
     <>
       {/* Mobile Overlay */}
-      {isOpen && (
+      {isOpen && window.innerWidth < 1024 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <motion.aside
-        initial={{ x: -280 }}
-        animate={{ x: isOpen ? 0 : -280 }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      <aside
         className={cn(
-          "fixed left-0 top-0 z-50 h-full w-70 bg-white border-r border-gray-200 shadow-lg lg:shadow-none",
-          "lg:relative lg:translate-x-0 lg:z-auto",
-          !isOpen && "lg:w-70"
+          "bg-white border-r border-gray-200 transition-all duration-300 ease-in-out",
+          // Mobile styles
+          "fixed left-0 top-0 z-50 h-full w-70 shadow-lg lg:shadow-none",
+          "transform lg:transform-none",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          // Desktop styles
+          "lg:relative lg:translate-x-0 lg:z-auto lg:w-70"
         )}
       >
         <div className="flex flex-col h-full">
@@ -126,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeItem, onItemCl
             ))}
           </div>
         </div>
-      </motion.aside>
+      </aside>
     </>
   );
 };
