@@ -3,13 +3,14 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Validate required environment variables
-const requiredEnvVars = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+const firebaseConfig = {
+  apiKey: "AIzaSyBYK7NzlXyCT8dWKo6ghXECbp0xJXClhCI",
+  authDomain: "pollify-50468.firebaseapp.com",
+  projectId: "pollify-50468",
+  storageBucket: "pollify-50468.firebasestorage.app",
+  messagingSenderId: "868568931115",
+  appId: "1:868568931115:web:6f9750cd5da781255d436e",
+  measurementId: "G-YGZYGD5BZZ"
 };
 
 // Check for missing or placeholder values
