@@ -25,8 +25,7 @@ export const db = getFirestore(app);
 // Initialize Google Auth Provider
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
-  prompt: 'select_account',
-  access_type: 'offline'
+  prompt: 'select_account'
 });
 
 // Add additional scopes if needed

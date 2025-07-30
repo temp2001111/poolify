@@ -52,11 +52,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const loginWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      console.log('Google sign-in successful:', result.user);
       return result.user;
     } catch (error: any) {
-      console.error('Google sign-in error:', error);
-      
       // Handle specific error cases
       if (error.code === 'auth/popup-closed-by-user') {
         throw new Error('Sign-in was cancelled. Please try again.');
@@ -76,7 +73,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('Auth state changed:', user);
       setCurrentUser(user);
       setLoading(false);
     });
