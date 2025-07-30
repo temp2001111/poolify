@@ -59,11 +59,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp, onToggleMode }) => {
     setError('');
 
     try {
+      // With redirect, the page will reload and navigation will be handled by the auth state change
       await loginWithGoogle();
-      navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || 'An error occurred during Google sign-in');
-    } finally {
       setIsLoading(false);
     }
   };
