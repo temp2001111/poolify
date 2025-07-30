@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Menu, X, BarChart3 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,20 +78,48 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <motion.button
-              className="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Sign In
-            </motion.button>
-            <motion.button
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-200"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Try Demo
-            </motion.button>
+            {currentUser ? (
+              <>
+                <motion.button
+                  onClick={() => navigate('/dashboard')}
+                  className="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Dashboard
+                </motion.button>
+                <motion.button
+                  onClick={async () => {
+                    await logout();
+                    navigate('/');
+                  }}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-200"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Logout
+                </motion.button>
+              </>
+            ) : (
+              <>
+                <motion.button
+                  onClick={() => navigate('/auth')}
+                  className="text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Sign In
+                </motion.button>
+                <motion.button
+                  onClick={() => navigate('/auth')}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-200"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Try Demo
+                </motion.button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -124,12 +156,50 @@ const Navbar = () => {
               </motion.a>
             ))}
             <div className="pt-3 sm:pt-4 space-y-2 sm:space-y-3">
-              <button className="block w-full text-left text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200">
-                Sign In
-              </button>
-              <button className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-full font-medium text-center text-sm sm:text-base">
-                Try Demo
-              </button>
+              {currentUser ? (
+                <>
+                  <button 
+                    onClick={() => {
+                      navigate('/dashboard');
+                      setIsOpen(false);
+                    }}
+                    className="block w-full text-left text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200"
+                  >
+                    Dashboard
+                  </button>
+                  <button 
+                    onClick={async () => {
+                      await logout();
+                      navigate('/');
+                      setIsOpen(false);
+                    }}
+                    className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-full font-medium text-center text-sm sm:text-base"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button 
+                    onClick={() => {
+                      navigate('/auth');
+                      setIsOpen(false);
+                    }}
+                    className="block w-full text-left text-gray-700 hover:text-gray-900 font-medium transition-colors duration-200"
+                  >
+                    Sign In
+                  </button>
+                  <button 
+                    onClick={() => {
+                      navigate('/auth');
+                      setIsOpen(false);
+                    }}
+                    className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-full font-medium text-center text-sm sm:text-base"
+                  >
+                    Try Demo
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </motion.div>

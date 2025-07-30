@@ -1,8 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Play, Star, Users, TrendingUp } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -97,11 +102,12 @@ const Hero = () => {
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-12 lg:mb-16 px-4 sm:px-0"
           >
             <motion.button
+              onClick={() => navigate(currentUser ? '/dashboard' : '/auth')}
               className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center group"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              Try Demo
+              {currentUser ? 'Go to Dashboard' : 'Try Demo'}
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
             </motion.button>
             
